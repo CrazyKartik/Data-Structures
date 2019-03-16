@@ -1,3 +1,3 @@
 # Data-Structures
-Contains Codes for all Data Structures and their operations implemented by me in C++.
+Contains Codes for Data Structures and their operations implemented by me in C++.
 All Codes are made from Scratch.
