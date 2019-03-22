@@ -11,7 +11,7 @@ But the operations all work fine
 #include<queue>
 using namespace std;
 
-int xd=INT_MAX;
+int xd=INT_MAX,del=0;
 int ht=0,count_nodes=0;
 
 struct node
@@ -72,6 +72,11 @@ void minheapify(struct node* rt)
 	rt=swap(rt);
 	minheapify(rt->left);
 	minheapify(rt->right);
+	if(rt->right!=NULL && rt->left==NULL)
+	{
+		rt->left=rt->right;
+		rt->right=NULL;
+	}
 	rt=swap(rt);
 	
 }
@@ -127,12 +132,21 @@ void get_node(struct node* rt,struct node* pr,int h)
 	get_node(rt->right,rt,h+1);
 }
 
+int del_last=0;
 struct node* remove_last(struct node* rt,int h)
 {
 	if(rt==NULL)
 	return NULL;
-	if(rt->data==xd && h==ht)
+	get_node(root,root->parent,0);
+	if(rt->data==xd && h==ht && del_last==0)
+	{
+		del_last=1;
+		if(rt->left==NULL && rt->right==NULL)
 		return NULL;
+		else if(rt->left!=NULL)
+		return rt->left;
+		return rt->right;
+	}
 	rt->left=remove_last(rt->left,h+1);
 	rt->right=remove_last(rt->right,h+1);
 	return rt;
@@ -141,16 +155,18 @@ struct node* remove_last(struct node* rt,int h)
 int vm;
 void delete_node(struct node* rt,int d)
 {
-	vm=INT_MAX;
 	if(rt==NULL)
 	return;
 	
 	if(rt->data==d)
 	{
+		vm=INT_MAX;
+		del=1;
 		get_node(root,root->parent,0);
 		vm=xd;
 		if(rt->data==vm)
 		{
+			del=0;
 			if(rt->parent!=NULL)
 			{
 				if(rt->parent->left==rt)
@@ -159,35 +175,28 @@ void delete_node(struct node* rt,int d)
 					rt->parent->right=NULL;
 				return;	
 			}
-			root=NULL;
+			if(rt->left!=NULL)
+			root=rt->left;
+			else
+			root=rt->right;
 			return;
 		}
 		rt->data=vm;
 	}
 	
-	else if(rt->data==vm)
-	{
-		if(rt->parent!=NULL)
-		{
-			if(rt->parent->left==rt)
-				rt->parent->left=NULL;
-			else
-				rt->parent->right=NULL;
-			return;	
-		}
-		rt=NULL;
-		return;
-	}
 	
-	if(rt->left==NULL && rt->right==NULL && rt->data==d)
+	else if(rt->left==NULL && rt->right==NULL && rt->data==d)
 	{
+		del=1;
+		if(rt->data=vm)
+		del=0;
 		if(rt->parent!=NULL)
 		{
 			if(rt->parent->left==rt)
 				rt->parent->left=NULL;
 			else
 				rt->parent->right=NULL;
-			return;	
+			return;
 		}
 		root=NULL;
 		return;
@@ -246,7 +255,7 @@ int main()
 	}
 	while(c);
 	
-	//Un-comment the section to make heapsort work
+	//De-Comment to run HeapSort
 	/*int A[count_nodes];
 	heapsort(A);
 	for(int i=0; i<count_nodes; i++)
@@ -255,24 +264,38 @@ int main()
 	}
 	cout<<endl;*/
 	
-	
 	do
 	{
 		ht=0;
+		int ht1=0;
 		temp=root;
 		while(temp!=NULL)
 		{
 			ht++;
 			temp=temp->left;
 		}
+		temp=root;
+		while(temp!=NULL)
+		{
+			ht1++;
+			temp=temp->right;
+		}
+		if(ht1>ht)
+		ht=ht1;
+		
 		cout<<"Enter the element to delete from heap : ";
 		cin>>d;
+		del=0,del_last=0;
+		
 		delete_node(root,d);
+		if(del)
 		root=remove_last(root,1);
 		minheapify(root);
+		
 		cout<<"Remaining Heap is : ";
 		Print(root);
 		cout<<endl;
+		
 		cout<<"Enter 0 to exit : ";
 		cin>>c;
 	}
