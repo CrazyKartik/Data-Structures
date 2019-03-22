@@ -138,17 +138,18 @@ struct node* remove_last(struct node* rt,int h)
 	return rt;
 }
 
+int vm;
 void delete_node(struct node* rt,int d)
 {
-	static int v=INT_MAX;
+	vm=INT_MAX;
 	if(rt==NULL)
 	return;
 	
 	if(rt->data==d)
 	{
 		get_node(root,root->parent,0);
-		v=xd;
-		if(rt->data==v)
+		vm=xd;
+		if(rt->data==vm)
 		{
 			if(rt->parent!=NULL)
 			{
@@ -161,10 +162,10 @@ void delete_node(struct node* rt,int d)
 			root=NULL;
 			return;
 		}
-		rt->data=v;
+		rt->data=vm;
 	}
 	
-	else if(rt->data==v)
+	else if(rt->data==vm)
 	{
 		if(rt->parent!=NULL)
 		{
@@ -245,13 +246,14 @@ int main()
 	}
 	while(c);
 	
-	int A[count_nodes];
+	//Un-comment the section to make heapsort work
+	/*int A[count_nodes];
 	heapsort(A);
 	for(int i=0; i<count_nodes; i++)
 	{
 		cout<<A[i]<<" ";
 	}
-	cout<<endl;
+	cout<<endl;*/
 	
 	
 	do
