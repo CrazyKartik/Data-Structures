@@ -51,7 +51,7 @@ void primMST(int *graph,int V,unordered_map <int,int> loc,int Ver[])
 int main() 
 { 
 	int V,v1,v2,w,c,v;
-	cout<<"Enter number of edges : ";
+	cout<<"Enter number of vertices : ";
 	cin>>V;
 	int Vertex[V],graph[V][V];
 	memset(graph,0,sizeof(graph));
